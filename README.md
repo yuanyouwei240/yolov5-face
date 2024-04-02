@@ -1,5 +1,7 @@
 ## What's New
 
+**2024.04** []
+
 **2023.04** [yolov8-face](https://github.com/derronqi/yolov8-face) (🔥🔥🔥↑) 
 
 **2022.10** [yolov7-face](https://github.com/derronqi/yolov7-face) (🔥🔥🔥↑)
