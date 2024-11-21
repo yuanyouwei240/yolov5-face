@@ -1,3 +1,4 @@
+import time
 import os
 import sys
 import cv2
@@ -66,11 +67,11 @@ def img_vis(img,orgimg,pred,vis_thres = 0.6):
                     no_vis_nums+=1
                     continue
 
-                xywh = (xyxy2xywh(det[j, :4].view(1, 4)) / gn).view(-1).tolist()
+                xyxy = det[j, :4].view(-1).tolist()
                 conf = det[j, 4].cpu().numpy()
-                landmarks = (det[j, 5:15].view(1, 10) / gn_lks).view(-1).tolist()
+                landmarks = det[j, 5:15].view(-1).tolist()
                 class_num = det[j, 15].cpu().numpy()
-                orgimg = show_results(orgimg, xywh, conf, landmarks, class_num)
+                orgimg = show_results(orgimg, xyxy, conf, landmarks, class_num)
 
     cv2.imwrite(cur_path+'/result.jpg', orgimg)
     print('result save in '+cur_path+'/result.jpg')
@@ -83,6 +84,9 @@ if __name__ == '__main__':
     parser.add_argument('--output_shape', type=list, default=[1,25200,16], help='input[1,3,640,640] ->  output[1,25200,16]') 
     opt = parser.parse_args()
 
+    # 检查 GPU 是否可用
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f'Using device: {device}')
 
     img,orgimg=img_process(opt.img_path) 
     model=TrtModel(opt.trt_path)
