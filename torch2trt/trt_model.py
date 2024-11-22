@@ -106,7 +106,9 @@ class TrtModel():
 
         np.copyto(host_inputs[0], img_np_nchw.ravel())
         cuda.memcpy_htod_async(cuda_inputs[0], host_inputs[0], stream)
-        context.execute_async(batch_size=self.batch_size, bindings=bindings, stream_handle=stream.handle)
+        # context.execute_async(batch_size=self.batch_size, bindings=bindings, stream_handle=stream.handle)
+        context.set_binding_shape(0, img_np_nchw.shape)
+        context.execute_async_v2(bindings=bindings, stream_handle=stream.handle)
         cuda.memcpy_dtoh_async(host_outputs[0], cuda_outputs[0], stream)
         stream.synchronize()
         self.ctx.pop()
